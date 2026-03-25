@@ -1,14 +1,16 @@
 pipeline {
-      agent {
+    agent any
+
+    stages {
+        /*
+
+        stage('Build') {
+            agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
-
-    stages {
-        stage('Build') {
-         
             steps {
                 sh '''
                     ls -la
@@ -20,18 +22,19 @@ pipeline {
                 '''
             }
         }
+        */
 
-         stage('Test') {
+        stage('Test') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+
             steps {
-                echo 'Test Stage'
                 sh '''
-                    if [ -f build/index.html ]; then
-                      echo "✅ build/index.html exists"
-                    else
-                      echo "❌ build/index.html NOT found"
-                      exit 1
-                    fi
-
+                    #test -f build/index.html
                     npm test
                 '''
             }
@@ -42,6 +45,7 @@ pipeline {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
+                    args 'u root:root'
                 }
             }
 
@@ -54,15 +58,11 @@ pipeline {
                 '''
             }
         }
-       
     }
-
-
 
     post {
         always {
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
-
     }
 }
