@@ -98,7 +98,7 @@ stages {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    args '-v $WORKSPACE:/workspace -w /workspace'
+                    reuseNode true
                 }
             }
 
@@ -111,12 +111,20 @@ stages {
                     pwd
                     ls -lah
                     npx playwright test  --reporter=html
+                    ls -lah playwright-report
                 '''
             }
 
             post {
                 always {
-                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: true, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E', reportTitles: ''])
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'playwright-report',
+                        reportFiles: 'index.html',
+                        reportName: 'Playwright E2E'
+                    ])
                 }
             }
         }
