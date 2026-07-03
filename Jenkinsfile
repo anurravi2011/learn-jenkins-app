@@ -98,7 +98,7 @@ stages {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
+                    args '-v $WORKSPACE:/workspace -w /workspace'
                 }
             }
 
@@ -108,6 +108,8 @@ stages {
 
             steps {
                 sh '''
+                    pwd
+                    ls -lah
                     npx playwright test  --reporter=html
                 '''
             }
