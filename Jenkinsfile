@@ -125,6 +125,7 @@ stages {
                         reportFiles: 'index.html',
                         reportName: 'Playwright E2E'
                     ])
+                    archiveArtifacts artifacts: 'playwright-report/**/*', allowEmptyArchive: true
                 }
             }
         }
