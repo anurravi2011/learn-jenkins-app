@@ -83,6 +83,12 @@ pipeline {
                     reuseNode true
                 }
             }
+
+            environment {
+                NETLIFY_SITE_ID = '84cc0822-cd67-4c22-8968-c7d7b66162ec'
+                NETLIFY_AUTH_TOKEN = credentials('netlifytokenlearnjenkinsapp')
+            }
+            
             steps {
                 sh '''
                     npm install netlify-cli
