@@ -9,12 +9,6 @@ pipeline {
 
     stages {
 
-        stage('Docker') {
-            steps {
-                sh 'docker build -t my-playwright .'
-            }
-        }
-
         stage('Build') {
             agent {
                 docker {
@@ -60,15 +54,14 @@ pipeline {
                 stage('E2E') {
                     agent {
                         docker {
-                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            image 'my-playwright'
                             reuseNode true
                         }
                     }
 
                     steps {
                         sh '''
-                            npm install serve
-                            npx serve -s build -l 3000 &
+                            serve -s build &
                             sleep 10
                             npx playwright test  --reporter=html
                         '''
@@ -124,7 +117,7 @@ pipeline {
             environment {
                 CI_ENVIRONMENT_URL = 'https://resplendent-sprinkles-644727.netlify.app'
             }
-
+            
             steps {
                 sh '''
                     node --version
